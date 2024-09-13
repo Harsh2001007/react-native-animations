@@ -9,6 +9,12 @@ import Animated, {
   withTiming,
   withRepeat,
 } from 'react-native-reanimated';
+import AnimationTwo from './screens/AnimationTwo';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {NavigationContainer} from '@react-navigation/native';
+import Home from './screens/Home';
+
+const Stack = createNativeStackNavigator();
 
 const handleRotation = (progress: Animated.SharedValue<number>) => {
   'worklet';
@@ -17,52 +23,26 @@ const handleRotation = (progress: Animated.SharedValue<number>) => {
 };
 
 const App = () => {
-  const progress = useSharedValue(0);
-  const scale = useSharedValue(3);
-  const bgColor = useSharedValue('purple');
-
-  const reaimatedStyle = useAnimatedStyle(() => {
-    return {
-      opacity: progress.value,
-      transform: [{scale: scale.value}, {rotate: handleRotation(progress)}],
-      backgroundColor: bgColor.value,
-    };
-  }, []);
-
-  useEffect(() => {
-    progress.value = withRepeat(withTiming(1, {duration: 3000}), 3, true);
-    scale.value = withRepeat(withSpring(1, {duration: 3000}), 4, true);
-    bgColor.value = withRepeat(withTiming('red', {duration: 3000}), 3, true);
-  }, []);
-
   return (
-    <SafeAreaView style={styles.container}>
-      <Animated.View
-        style={[
-          {
-            height: 100,
-            width: 100,
-            backgroundColor: 'purple',
-            borderRadius: 10,
-          },
-          reaimatedStyle,
-        ]}
-      />
-    </SafeAreaView>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="App">
+        <Stack.Screen
+          name="Home"
+          component={Home}
+          options={{
+            title: 'Home screen',
+          }}
+        />
+        <Stack.Screen
+          name="Animation-2"
+          component={AnimationTwo}
+          options={{
+            title: 'Animation - part two',
+          }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 };
-
-const styles = StyleSheet.create({
-  text: {
-    fontSize: 20,
-    color: 'black',
-    fontWeight: '700',
-  },
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
 
 export default App;
