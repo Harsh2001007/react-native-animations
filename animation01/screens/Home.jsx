@@ -41,6 +41,10 @@ export default function Home() {
   function navigationToTwo() {
     navigation.navigate('Animation-2');
   }
+
+  function navigationThree() {
+    navigation.navigate('Animation-3');
+  }
   return (
     <>
       <SafeAreaView style={styles.container}>
@@ -59,6 +63,7 @@ export default function Home() {
         </View>
       </SafeAreaView>
       <Button title="Animation Part two ->" onPress={navigationToTwo} />
+      <Button title="Animation Part two ->" onPress={navigationThree} />
     </>
   );
 }

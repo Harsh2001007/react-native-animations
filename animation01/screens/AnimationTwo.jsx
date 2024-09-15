@@ -8,19 +8,33 @@ import Animated, {
   useAnimatedGestureHandler,
   useAnimatedStyle,
   useSharedValue,
+  withSpring,
 } from 'react-native-reanimated';
 
-const SIZE = 100.0;
+const SIZE = 70.0;
+const CIRCLE_RADIUS = SIZE * 2;
 
 export default function AnimationTwo() {
   const translateX = useSharedValue(0);
+  const translateY = useSharedValue(0);
 
   const panGestureEvent = useAnimatedGestureHandler({
-    onStart: () => {},
-    onActive: event => {
-      translateX.value = event.translationX;
+    onStart: (event, context) => {
+      context.translateX = translateX.value;
+      context.translateY = translateY.value;
     },
-    onEnd: () => {},
+    onActive: (event, context) => {
+      translateX.value = event.translationX + context.translateX;
+      translateY.value = event.translationY + context.translateY;
+    },
+    onEnd: () => {
+      const distance = Math.sqrt(translateX.value ** 2 + translateY.value ** 2);
+
+      if (distance < CIRCLE_RADIUS + SIZE / 2) {
+        translateX.value = withSpring(0);
+        translateY.value = withSpring(0);
+      }
+    },
   });
 
   const rStyle = useAnimatedStyle(() => {
@@ -29,15 +43,20 @@ export default function AnimationTwo() {
         {
           translateX: translateX.value,
         },
+        {
+          translateY: translateY.value,
+        },
       ],
     };
   });
   return (
     <GestureHandlerRootView>
       <SafeAreaView style={styles.container}>
-        <PanGestureHandler onGestureEvent={panGestureEvent}>
-          <Animated.View style={[styles.square, rStyle]} />
-        </PanGestureHandler>
+        <View style={styles.circle}>
+          <PanGestureHandler onGestureEvent={panGestureEvent}>
+            <Animated.View style={[styles.square, rStyle]} />
+          </PanGestureHandler>
+        </View>
       </SafeAreaView>
     </GestureHandlerRootView>
   );
@@ -56,5 +75,14 @@ const styles = StyleSheet.create({
     width: SIZE,
     backgroundColor: 'rgba(0,0,256,0.5)',
     borderRadius: 10,
+  },
+  circle: {
+    height: CIRCLE_RADIUS * 2,
+    width: CIRCLE_RADIUS * 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: CIRCLE_RADIUS,
+    borderWidth: 5,
+    borderColor: 'rgba(0,0,256,0.5)',
   },
 });

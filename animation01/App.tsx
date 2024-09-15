@@ -13,6 +13,7 @@ import AnimationTwo from './screens/AnimationTwo';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {NavigationContainer} from '@react-navigation/native';
 import Home from './screens/Home';
+import AnimationThree from './screens/AnimationThree';
 
 const Stack = createNativeStackNavigator();
 
@@ -38,6 +39,15 @@ const App = () => {
           component={AnimationTwo}
           options={{
             title: 'Animation - part two',
+          }}
+        />
+
+        <Stack.Screen
+          name="Animation-3"
+          component={AnimationThree}
+          options={{
+            title: 'Animation - part three',
+            headerShown: false,
           }}
         />
       </Stack.Navigator>
